@@ -8,6 +8,7 @@ The current prototype supports functions written in C/C++, Go, Node.js, and Pyth
 ### Building Nightcore ###
 
 ```
+git submodule update --init --recursive
 ./build_deps.sh
 make -j $(nproc)
 ```
