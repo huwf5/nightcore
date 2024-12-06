@@ -2,6 +2,9 @@
 /build/
 /bin/
 /deps/out/
+/deps/src/
+/deps/tmp/
+/CMAKE/
 /.release_time
 /.debug_time
 /worker/golang/build/

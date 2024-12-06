@@ -7,29 +7,33 @@ BUILD_TYPE=release
 rm -rf $BASE_DIR/outputs
 mkdir -p $BASE_DIR/outputs
 
-$NIGHTCORE_ROOT/bin/$BUILD_TYPE/gateway \
+# $NIGHTCORE_ROOT/bin/$BUILD_TYPE/gateway \
+$NIGHTCORE_ROOT/CMAKE/src/bin/gateway \
     --func_config_file=$BASE_DIR/func_config.json \
     --v=1 2>$BASE_DIR/outputs/gateway.log &
 
 sleep 1
 
-$NIGHTCORE_ROOT/bin/$BUILD_TYPE/engine \
+# $NIGHTCORE_ROOT/bin/$BUILD_TYPE/engine \
+$NIGHTCORE_ROOT/CMAKE/src/bin/engine \
     --func_config_file=$BASE_DIR/func_config.json \
     --node_id=0 \
     --v=1 2>$BASE_DIR/outputs/engine.log &
 
 sleep 1
 
-$NIGHTCORE_ROOT/bin/$BUILD_TYPE/launcher \
+# $NIGHTCORE_ROOT/bin/$BUILD_TYPE/launcher \
+$NIGHTCORE_ROOT/CMAKE/src/bin/launcher \
     --func_id=1 --fprocess_mode=cpp \
     --fprocess_output_dir=$BASE_DIR/outputs \
-    --fprocess="$NIGHTCORE_ROOT/bin/$BUILD_TYPE/func_worker_v1 $BASE_DIR/libfoo.so" \
+    --fprocess="$NIGHTCORE_ROOT/CMAKE/src/bin/func_worker_v1 $BASE_DIR/libfoo.so" \
     --v=1 2>$BASE_DIR/outputs/launcher_foo.log &
 
-$NIGHTCORE_ROOT/bin/$BUILD_TYPE/launcher \
+# $NIGHTCORE_ROOT/bin/$BUILD_TYPE/launcher \
+$NIGHTCORE_ROOT/CMAKE/src/bin/launcher \
     --func_id=2 --fprocess_mode=cpp \
     --fprocess_output_dir=$BASE_DIR/outputs \
-    --fprocess="$NIGHTCORE_ROOT/bin/$BUILD_TYPE/func_worker_v1 $BASE_DIR/libbar.so" \
+    --fprocess="$NIGHTCORE_ROOT/CMAKE/src/bin/func_worker_v1 $BASE_DIR/libbar.so" \
     --v=1 2>$BASE_DIR/outputs/launcher_bar.log &
 
 wait
