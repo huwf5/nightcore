@@ -1,35 +1,40 @@
 FROM nightcore:latest AS nightcore
 
-FROM debian:buster-slim
+FROM debian:bullseye-slim
 
+# REQUIRED ARGUMENTS
+# LIB_PATH is the path for user provided library
+ARG LIB_PATH 
+# FUNC_ID is the id for user provided function
+ARG FUNC_ID
+
+# OPTIONAL ARGUMENTS
 ARG ROOT_PATH_FOR_IPC=/tmp/nightcore/ipc
 ARG FPROCESS_OUTPUT_DIR=/tmp/nightcore/output
 ARG FPROCESS_MODE=cpp
 ARG FPROCESS_WORKING_DIR
 
+# ENVIRONMENT VARIABLES
+ENV LIB_PATH=${LIB_PATH}
+ENV FUNC_ID=${FUNC_ID}
 ENV ROOT_PATH_FOR_IPC=${ROOT_PATH_FOR_IPC}
 ENV FPROCESS_OUTPUT_DIR=${FPROCESS_OUTPUT_DIR}
 ENV FPROCESS_MODE=${FPROCESS_MODE}
 ENV FPROCESS_WORKING_DIR=${FPROCESS_WORKING_DIR}
 
-ARG FPROCESS
-ARG FUNC_ID
-
-RUN test -n "$FPROCESS" || (echo "Error: FPROCESS must be provided" && false)
-RUN test -n "$FUNC_ID" || (echo "Error: FUNC_ID must be provided" && false)
-
-ENV FPROCESS=${FPROCESS}
-ENV FUNC_ID=${FUNC_ID}
-
+# VALIDATION
+RUN : \
+    && test -n "$LIB_PATH" || (echo "Error: LIB_PATH must be provided" && false) \
+    && test -n "$FUNC_ID" || (echo "Error: FUNC_ID must be provided" && false)
 
 COPY --from=nightcore /nightcore/launcher /nightcore/launcher
-COPY ./${FPROCESS} /nightcore/fprocess
-RUN chmod +x /nightcore/fprocess
+COPY --from=nightcore /nightcore/func_worker_v1 /nightcore/func_worker_v1
+COPY ./${LIB_PATH} /nightcore/lib
 
-CMD ["/bin/sh", "-c", "/nightcore/launcher \
+CMD /nightcore/launcher \
     --root_path_for_ipc=${ROOT_PATH_FOR_IPC} \
     --fprocess_mode=${FPROCESS_MODE} \
     --fprocess_working_dir=${FPROCESS_WORKING_DIR} \
     --fprocess_output_dir=${FPROCESS_OUTPUT_DIR} \
-    --fprocess=/nightcore/fprocess \
-    --func_id=${FUNC_ID}"]
+    --fprocess="/nightcore/func_worker_v1 /nightcore/lib" \
+    --func_id=${FUNC_ID}

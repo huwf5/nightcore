@@ -2,9 +2,7 @@ FROM ubuntu:focal AS builder
 
 RUN sed -i 's|http://archive.ubuntu.com/ubuntu/|http://mirrors.aliyun.com/ubuntu/|g' /etc/apt/sources.list && \
     DEBIAN_FRONTEND=noninteractive apt update && apt upgrade -y && \
-    DEBIAN_FRONTEND=noninteractive apt install -y build-essential cmake wget git 
-
-RUN apt install -y python3-dev
+    DEBIAN_FRONTEND=noninteractive apt install -y build-essential cmake wget git python3-dev
 
 WORKDIR /nightcore
 COPY . .

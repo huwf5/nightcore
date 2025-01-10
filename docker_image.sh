@@ -13,7 +13,7 @@ function build_launcher(){
     local func_id=$2
     local fprocess_path=$3
     docker build -t ${fprocess_name}:latest \
-        --build-arg FPROCESS=${fprocess_path} \
+        --build-arg LIB_PATH=${fprocess_path} \
         --build-arg FUNC_ID=${func_id} \
         -f ${ROOT_DIR}/dockerfiles/Dockerfile.launcher \
         ${ROOT_DIR}

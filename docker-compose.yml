@@ -32,7 +32,6 @@ services:
       - --max_running_requests=24
     volumes:
       - /mnt/inmem/nightcore:/tmp/nightcore
-      # - /tmp/nightcore_config.json:/tmp/nightcore/func_config.json
 
   foo:
     image: foo:latest

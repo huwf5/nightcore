@@ -8,6 +8,10 @@ build: clean
 	mkdir -p $(BUILD_DIR)
 	cd $(BUILD_DIR) && cmake .. && make -j $(nproc)
 
+debug: clean
+	mkdir -p $(BUILD_DIR)
+	cd $(BUILD_DIR) && cmake .. -DCMAKE_BUILD_TYPE=Debug && make -j $(nproc)
+
 .PHONY: clean
 clean:
 	rm -rf $(BUILD_DIR)

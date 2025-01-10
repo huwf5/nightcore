@@ -1,12 +1,16 @@
 #!/bin/bash
 
-# TODO:
+# PRE-REQUISITE
 # delete the excluded files in .dockerignore
 
-# ./docker_image.sh nightcore
+# BUILD NIGHTCORE
+./docker_image.sh nightcore
+
+# BUILD FUNCTIONS
 ./docker_image.sh foo
 ./docker_image.sh bar
 
+# SETUP ENVIRONMENT for ENGINE
 sudo rm -rf /mnt/inmem/nightcore
 sudo mkdir -p /mnt/inmem/nightcore
 sudo mkdir -p /mnt/inmem/nightcore/output /mnt/inmem/nightcore/ipc
