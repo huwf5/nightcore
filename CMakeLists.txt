@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.19)
+cmake_minimum_required(VERSION 3.10)
 
 project(nightcore)
 
@@ -132,11 +132,13 @@ add_subdirectory(${DEPS}/json)
 # libuv
 set(LiBUV_BUILD_TESTS OFF CACHE BOOL "Build libuv tests")
 add_subdirectory(${DEPS}/libuv)
+include_directories(${DEPS}/libuv/include)
 
 # nghttp2
 set(ENABLE_LIB_ONLY ON CACHE BOOL "Only build nghttp2 library")
 set(ENABLE_ASIO_LIB OFF CACHE BOOL "Do not build the asio library")
 set(ENABLE_STATIC_LIB ON CACHE BOOL "Build static library")
+set(ENABLE_SHARED_LIB OFF CACHE BOOL "Build shared library")
 set(WITH_JEMALLOC OFF CACHE BOOL "Do not use jemalloc")
 add_subdirectory(${DEPS}/nghttp2)
 include_directories(${DEPS}/nghttp2/lib/includes)

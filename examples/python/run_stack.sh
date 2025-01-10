@@ -24,14 +24,14 @@ sleep 1
 
 # PYTHONPATH=$NIGHTCORE_ROOT/worker/python $NIGHTCORE_ROOT/bin/$BUILD_TYPE/launcher \
 PYTHONPATH=$NIGHTCORE_ROOT/worker/python $NIGHTCORE_ROOT/CMAKE/src/bin/launcher \
-    --func_id=1 --fprocess_mode=go \
+    --func_id=1 --fprocess_mode=python \
     --fprocess_output_dir=$BASE_DIR/outputs \
     --fprocess="python3 $BASE_DIR/main.py" \
     --v=1 2>$BASE_DIR/outputs/launcher_foo.log &
 
 # PYTHONPATH=$NIGHTCORE_ROOT/worker/python $NIGHTCORE_ROOT/bin/$BUILD_TYPE/launcher \
 PYTHONPATH=$NIGHTCORE_ROOT/worker/python $NIGHTCORE_ROOT/CMAKE/src/bin/launcher \
-    --func_id=2 --fprocess_mode=go \
+    --func_id=2 --fprocess_mode=python \
     --fprocess_output_dir=$BASE_DIR/outputs \
     --fprocess="python3 $BASE_DIR/main.py" \
     --v=1 2>$BASE_DIR/outputs/launcher_bar.log &

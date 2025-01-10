@@ -35,7 +35,7 @@ target_link_libraries(gateway_grpc_connection PRIVATE
     server_io_worker
     server_connection_base
     gateway_func_call_context
-    nghttp2
+    nghttp2_static
     common_time
     common_http_status
     gateway_server

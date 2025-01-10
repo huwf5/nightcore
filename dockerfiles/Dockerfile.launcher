@@ -1,0 +1,35 @@
+FROM nightcore:latest AS nightcore
+
+FROM debian:buster-slim
+
+ARG ROOT_PATH_FOR_IPC=/tmp/nightcore/ipc
+ARG FPROCESS_OUTPUT_DIR=/tmp/nightcore/output
+ARG FPROCESS_MODE=cpp
+ARG FPROCESS_WORKING_DIR
+
+ENV ROOT_PATH_FOR_IPC=${ROOT_PATH_FOR_IPC}
+ENV FPROCESS_OUTPUT_DIR=${FPROCESS_OUTPUT_DIR}
+ENV FPROCESS_MODE=${FPROCESS_MODE}
+ENV FPROCESS_WORKING_DIR=${FPROCESS_WORKING_DIR}
+
+ARG FPROCESS
+ARG FUNC_ID
+
+RUN test -n "$FPROCESS" || (echo "Error: FPROCESS must be provided" && false)
+RUN test -n "$FUNC_ID" || (echo "Error: FUNC_ID must be provided" && false)
+
+ENV FPROCESS=${FPROCESS}
+ENV FUNC_ID=${FUNC_ID}
+
+
+COPY --from=nightcore /nightcore/launcher /nightcore/launcher
+COPY ./${FPROCESS} /nightcore/fprocess
+RUN chmod +x /nightcore/fprocess
+
+CMD ["/bin/sh", "-c", "/nightcore/launcher \
+    --root_path_for_ipc=${ROOT_PATH_FOR_IPC} \
+    --fprocess_mode=${FPROCESS_MODE} \
+    --fprocess_working_dir=${FPROCESS_WORKING_DIR} \
+    --fprocess_output_dir=${FPROCESS_OUTPUT_DIR} \
+    --fprocess=/nightcore/fprocess \
+    --func_id=${FUNC_ID}"]

@@ -1,0 +1,57 @@
+services:
+  nightcore-engine:
+    image: nightcore:latest
+    entrypoint:
+      - /nightcore/engine
+      - --gateway_addr=nightcore-gateway
+      - --root_path_for_ipc=/tmp/nightcore/ipc
+      - --func_config_file=/tmp/nightcore/func_config.json
+      - --num_io_workers=1
+      - --gateway_conn_per_worker=32
+      - --disable_monitor
+      - --instant_rps_p_norm=0.8
+    depends_on:
+      - nightcore-gateway
+    volumes:
+      - /mnt/inmem/nightcore:/tmp/nightcore
+      - /sys/fs/cgroup:/tmp/root_cgroupfs
+    environment:
+      - FAAS_CGROUP_FS_ROOT=/tmp/root_cgroupfs
+
+  nightcore-gateway:
+    image: nightcore:latest
+    ports:
+      - 8080:8080
+    entrypoint:
+      - /nightcore/gateway
+      - --listen_addr=0.0.0.0
+      - --http_port=8080
+      - --func_config_file=/tmp/nightcore/func_config.json
+      - --num_io_workers=8
+      - --lb_pick_least_load
+      - --max_running_requests=24
+    volumes:
+      - /mnt/inmem/nightcore:/tmp/nightcore
+      # - /tmp/nightcore_config.json:/tmp/nightcore/func_config.json
+
+  foo:
+    image: foo:latest
+    volumes:
+      - /mnt/inmem/nightcore:/tmp/nightcore
+    environment:
+      - FAAS_GO_MAX_PROC_FACTOR=8
+      - GOGC=1000
+    depends_on:
+      - nightcore-engine
+    restart: always
+
+  bar:
+    image: bar:latest
+    volumes:
+      - /mnt/inmem/nightcore:/tmp/nightcore
+    environment:
+      - FAAS_GO_MAX_PROC_FACTOR=8
+      - GOGC=1000
+    depends_on:
+      - nightcore-engine
+    restart: always

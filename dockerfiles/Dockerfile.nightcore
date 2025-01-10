@@ -1,0 +1,22 @@
+FROM ubuntu:focal AS builder
+
+RUN sed -i 's|http://archive.ubuntu.com/ubuntu/|http://mirrors.aliyun.com/ubuntu/|g' /etc/apt/sources.list && \
+    DEBIAN_FRONTEND=noninteractive apt update && apt upgrade -y && \
+    DEBIAN_FRONTEND=noninteractive apt install -y build-essential cmake wget git 
+
+RUN apt install -y python3-dev
+
+WORKDIR /nightcore
+COPY . .
+RUN make -j $(nproc)
+
+FROM ubuntu:focal AS release
+
+COPY . /src/nightcore
+
+COPY --from=builder /nightcore/build/src/bin/gateway         /nightcore/gateway
+COPY --from=builder /nightcore/build/src/bin/engine          /nightcore/engine
+COPY --from=builder /nightcore/build/src/bin/launcher        /nightcore/launcher
+COPY --from=builder /nightcore/build/src/bin/func_worker_v1  /nightcore/func_worker_v1
+
+WORKDIR /nightcore
